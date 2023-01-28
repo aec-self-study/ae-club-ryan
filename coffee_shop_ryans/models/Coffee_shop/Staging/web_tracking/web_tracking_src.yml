@@ -5,3 +5,4 @@ sources:
     project: analytics-engineers-club
     tables:
       - name: pageviews
+        description: "Model based upon the web traffic"
