@@ -20,16 +20,19 @@ with order_items as (
     select * from {{ ref('int_new_customer') }}
 )
 , joined as (
-    select DATE_TRUNC(DATE(orders.ordered_at), WEEK) as order_week
+    select products.product_id
+        , orders.order_id
+        , customers.customer_id
+        , products.product_name
         , products.category
+        , prices.price as price
+        , orders.ordered_at
         , IF(orders.ordered_at=customers.first_order_at,'New','Returning') as customer_type
-        , SUM(prices.price) as revenue
     from orders orders
     left join order_items items ON orders.order_id = items.order_id
     left join products products ON products.product_id = items.product_id
     left join product_prices prices ON prices.product_id = products.product_id
     left join new_customers customers ON customers.customer_id = orders.customer_id
-    group by 1,2,3
-    order by 1
+    order by 2,1
 )
 select * from joined
