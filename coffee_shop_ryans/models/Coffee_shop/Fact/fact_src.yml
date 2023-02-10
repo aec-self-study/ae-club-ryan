@@ -1,0 +1,17 @@
+version: 2
+
+models:
+  - name: fact_order_items
+    columns:
+      - name: product_id
+        tests:
+          - not_null
+      - name: order_id
+        tests:
+          - not_null
+      - name: customer_id
+        tests:
+          - not_null
+      - name: price
+        tests:
+          - greater_than_zero
