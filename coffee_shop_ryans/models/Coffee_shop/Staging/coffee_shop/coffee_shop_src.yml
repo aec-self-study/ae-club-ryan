@@ -3,20 +3,7 @@ version: 2
 sources:
   - name: coffee_shop
     project: analytics-engineers-club
-
     tables:
-      - name: customer_query
-        description: "Model based upon our customers"
-        columns:
-          - name: id
-            description: "Primary key of the model"
-            tests:
-              - unique
-              - not_null
-              - relationships:
-                  to: source('coffee_shop','customers')
-                  field: id
-                  
       - name: customers
         columns:
           - name: id
@@ -48,14 +35,18 @@ sources:
       - name: product_prices
         columns:
           - name: id
-            tests:
-              - unique
-              - not_null
           - name: product_id
             tests:
+              - not_null
               - relationships:
                   to: source('coffee_shop', 'products')
                   field: id
+        tests:
+          - dbt_utils.mutually_exclusive_ranges:
+                lower_bound_column: created_at
+                upper_bound_column: ended_at
+                partition_by: product_id
+                gaps: not_allowed
 
       - name: order_items
         columns:
@@ -73,3 +64,16 @@ sources:
               - relationships:
                   to: source('coffee_shop', 'products')
                   field: id
+
+models:
+  - name: stg_customers
+    columns:
+      - name: customer_id
+        description: primary_key
+        tests:
+          - unique
+          - not_null
+      - name: customer_name
+      - name: email
+        tests:
+          - email_format
