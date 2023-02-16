@@ -5,6 +5,7 @@ sources:
     project: analytics-engineers-club
     tables:
         - name: form_events
+        - name: favorite_ice_cream_flavors
 
 models:
   - name: fact_order_items
